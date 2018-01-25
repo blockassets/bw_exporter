@@ -23,7 +23,7 @@ Install [dep](https://github.com/golang/dep) and the dependencies...
 Copy the `bw_exporter` binary to `/usr/bin`
 
 ```
-scp bw-exporter root@MINER_IP:/usr/bin
+scp bw_exporter root@MINER_IP:/usr/bin
 ```
 
 Create `/etc/systemd/system/bw_exporter.service`
