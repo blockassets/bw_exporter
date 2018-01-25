@@ -75,19 +75,17 @@ func NewExporter(cgHost string, cgPort int64, cgTimeout time.Duration) (*Exporte
 
 // Parses the map[string]float64 into a gauge with labels.
 // {"1_accept": 1, "1_reject": 100}
-func collectChipStat(e *Exporter, cgStats *CgminerStats, ch chan<- prometheus.Metric) {
+func collectChipStat(e *Exporter, cgStats *CgminerStats) {
 	chipStat := cgStats.ChipStat
 	for chip, value := range *chipStat {
 		s := strings.Split(chip, "_")
 		chipId, chipType := s[0], s[1]
 		e.chipStatGauge.WithLabelValues(chipId, chipType).Set(value)
 	}
-
-	e.chipStatGauge.Collect(ch)
 }
 
 //
-func collectDevs(e *Exporter, cgStats *CgminerStats, ch chan<- prometheus.Metric) {
+func collectDevs(e *Exporter, cgStats *CgminerStats) {
 	devs := cgStats.Devs
 	for id, value := range *devs {
 		idStr := strconv.Itoa(id)
@@ -100,6 +98,11 @@ func collectDevs(e *Exporter, cgStats *CgminerStats, ch chan<- prometheus.Metric
 		e.devsErrorsGauge.WithLabelValues(idStr).Set(float64(value.HardwareErrors))
 	}
 
+}
+
+// Outputs the gauge values on the channel
+func collectGauges(e *Exporter, ch chan<- prometheus.Metric) {
+	e.chipStatGauge.Collect(ch)
 	e.devsHashRateGauge.Collect(ch)
 	e.devsHashCountGauge.Collect(ch)
 	e.devsErrorsGauge.Collect(ch)
@@ -108,8 +111,8 @@ func collectDevs(e *Exporter, cgStats *CgminerStats, ch chan<- prometheus.Metric
 //
 func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	e.chipStatGauge.Describe(ch)
-	e.devsHashRateGauge.Describe(ch)
 	e.devsHashCountGauge.Describe(ch)
+	e.devsHashRateGauge.Describe(ch)
 	e.devsErrorsGauge.Describe(ch)
 }
 
@@ -124,6 +127,8 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 		return
 	}
 
-	collectChipStat(e, cgStats, ch)
-	collectDevs(e, cgStats, ch)
+	collectChipStat(e, cgStats)
+	collectDevs(e, cgStats)
+
+	collectGauges(e, ch)
 }
