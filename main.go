@@ -8,6 +8,12 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"time"
+	"os"
+)
+
+var (
+	// Makefile build
+	version = ""
 )
 
 func main() {
@@ -24,5 +30,6 @@ func main() {
 	prometheus.MustRegister(exporter)
 
 	http.Handle("/metrics", promhttp.Handler())
+	log.Printf("%s %s", os.Args[0], version)
 	log.Fatal(http.ListenAndServe(*port, nil))
 }
