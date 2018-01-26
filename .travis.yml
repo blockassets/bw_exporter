@@ -11,17 +11,21 @@ install:
 
 stages:
   - test
-  - build
   - name: deploy
     if: branch = master
 
 jobs:
   include:
     - stage: test
+      script: "make"
       script: "make test"
-    - stage: build
-      script: "make arm"
     - stage: deploy
+      script: "make arm"
+      before_deploy:
+        # Set up git user name and tag this commit
+        - git config --local user.name "lookfirst"
+        - git config --local user.email "latchkey@gmail.com"
+        - git tag "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
       deploy:
         provider: releases
         api_key:
