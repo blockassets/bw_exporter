@@ -1,0 +1,31 @@
+language: go
+go:
+- 1.x
+env:
+- DEP_VERSION="v0.4.1"
+before_install:
+- curl -L -s https://github.com/golang/dep/releases/download/${DEP_VERSION}/dep-linux-amd64
+  -o $GOPATH/bin/dep
+- chmod +x $GOPATH/bin/dep
+install:
+- dep ensure
+
+stages:
+  - test
+  - build
+  - name: deploy
+    if: branch = master
+
+jobs:
+  include:
+    - stage: test
+      script: "make test"
+    - stage: build
+      script: "make arm"
+    - stage: deploy
+      deploy:
+        provider: releases
+        api_key:
+          secure: LrVDLOXcTRY36uDlsIfwoWXhzEdr5SP+NxAWRy0SoCjMTtZNqusfl27Gx29m2TaAADvEVjzY+61oOPZ1y4jIeUxQO8tC83nidy2nEAm9EVGJYnxyqzRXCnaJwW9A1+7qVUYOqfSS14KzXBnPVSAZZqoYC67VrnDi0tG/d2bDgHBr0jAMXO/XFBPaIIfXyN60tyV77PVeBlSedJXRwXLrwsCnG2TB7nXcmZZwnzkUFeLndenF7GisfhMqVf+whf27/5cOhTs9+gdePXPMm/XWg3LeGQVjan4ea7ge96ydiKK29V/cLSL9/Hg9HhfuBruG4rKT2Ddo4chHaUM7EaYjlYvFyJUxn/GXbT6qt4ydhEvb2DaUmnE40W8glRFnRFIsNRTcU37IRIv9A4qSAeaaNEphXsK++Ow/ZrA7WIDa0nPC6acLYFvMuxdpIYNXFA8F8a/TVSe4f25s9gWC0lsOxU2YhieDHGCP8tD073ocnghm1bMwzjAm3TaojFffSOqfdjfHhGan93jyxir7iodIue3upZsMDyXGP0o6lCS9MR/uY9QzoQMijqs2fu0v9j9G3zIUwA3u86qGAp7Cj3QVDBrvRKNiSjZX0c7bK7lhGEOnNZ3NXU5/kRXISw0esscqmk1Q3XX1a63p2HQTgLvtuqRZRXhadpgPlUpYKkFlcRo=
+        file: bw_exporter
+        skip_cleanup: true
