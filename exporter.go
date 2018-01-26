@@ -62,7 +62,7 @@ func (e *Exporter) fetchData() (*CgminerStats, error) {
 }
 
 //
-func NewExporter(cgHost string, cgPort int64, cgTimeout time.Duration) (*Exporter, error) {
+func NewExporter(cgHost string, cgPort int64, cgTimeout time.Duration) (*Exporter) {
 	return &Exporter{
 		hostname:			cgHost,
 		port:				cgPort,
@@ -71,7 +71,7 @@ func NewExporter(cgHost string, cgPort int64, cgTimeout time.Duration) (*Exporte
 		devsHashCountGauge:	newGaugeMetric("devs_hashcount_total", "Device hash accept/reject total", []string{"id", "state"}),
 		devsHashRateGauge:	newGaugeMetric("devs_hashrate_total", "Device hashrate total", []string{"id", "rate"}),
 		devsErrorsGauge:	newGaugeMetric("devs_errors_total", "Device hardware errors total", []string{"id"}),
-	}, nil
+	}
 }
 
 // Parses the map[string]float64 into a gauge with labels.

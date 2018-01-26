@@ -23,11 +23,7 @@ func main() {
 	cgTimeout := flag.Duration("cgtimeout", 5 * time.Second, "The amount of time to wait for cgminer to return.")
 	flag.Parse()
 
-	exporter, err := NewExporter(*cgHost, *cgPort, *cgTimeout)
-	if err != nil {
-		log.Fatal(err)
-	}
-	prometheus.MustRegister(exporter)
+	prometheus.MustRegister(NewExporter(*cgHost, *cgPort, *cgTimeout))
 
 	http.Handle("/metrics", promhttp.Handler())
 	log.Printf("%s %s", os.Args[0], version)
