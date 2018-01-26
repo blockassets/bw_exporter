@@ -7,7 +7,7 @@ build:
 	@go build ${COMPILE_FLAGS}
 
 arm:
-	GOOS=linux GOARCH=arm GOARM=7 go build ${COMPILE_FLAGS}
+	@GOOS=linux GOARCH=arm GOARM=7 go build ${COMPILE_FLAGS}
 
 test:
 	@go test ./cgminer
