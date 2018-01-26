@@ -17,7 +17,6 @@ stages:
 jobs:
   include:
     - stage: test
-      script: "make"
       script: "make test"
     - stage: deploy
       script: "make arm"
