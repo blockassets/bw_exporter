@@ -1,6 +1,10 @@
+[![Build Status](https://travis-ci.org/lookfirst/bw_exporter.svg?branch=master)](https://travis-ci.org/lookfirst/bw_exporter)
+
 # BW Exporter
 
-This is a Prometheus.io exporter for the cgminer binary that is shipped with the BW.com L21 miner. It currently only exports data for the chipstat command, but will export more data in the near future.
+This is a [Prometheus.io](https://prometheus.io/) exporter for the cgminer binary that is shipped with the BW.com L21 miner. It currently exports a limited set of data. PR's welcome!
+
+The [releases tab](https://github.com/lookfirst/bw_exporter/releases) has `master` binaries cross compiled for ARM suitable for running on the miner. These are built automatically on [Travis](https://travis-ci.org/lookfirst/bw_exporter).
 
 ### Usage (defaults):
 
@@ -54,4 +58,4 @@ ssh root@MINER_IP "systemctl enable bw_exporter; systemctl start bw_exporter"
 
 ### Test install on miner
 
-Open your browser to http://MINER_IP:4030/metrics
+Open your browser to `http://MINER_IP:4030/metrics`
