@@ -92,6 +92,7 @@ func collectDevs(e *Exporter, cgStats *CgminerStats) {
 		idStr := strconv.Itoa(id)
 		e.devsHashCountGauge.WithLabelValues(idStr, "accept").Set(float64(value.Accepted))
 		e.devsHashCountGauge.WithLabelValues(idStr, "reject").Set(float64(value.Rejected))
+		e.devsHashRateGauge.WithLabelValues(idStr, "MHS_av").Set(value.MHSav)
 		e.devsHashRateGauge.WithLabelValues(idStr, "MHS_5s").Set(value.MHS5s)
 		e.devsHashRateGauge.WithLabelValues(idStr, "MHS_1m").Set(value.MHS1m)
 		e.devsHashRateGauge.WithLabelValues(idStr, "MHS_5m").Set(value.MHS5m)
