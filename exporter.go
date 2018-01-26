@@ -2,12 +2,13 @@ package main
 
 import (
 	"log"
-	"github.com/prometheus/client_golang/prometheus"
 	"strings"
 	"sync"
 	"time"
-	"bw_exporter/cgminer"
-        "strconv"
+	"strconv"
+
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/lookfirst/bw_exporter/cgminer"
 )
 
 //
