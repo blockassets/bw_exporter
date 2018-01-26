@@ -29,6 +29,7 @@ The [releases tab](https://github.com/lookfirst/bw_exporter/releases) has `maste
 Download the latest release and copy the `bw_exporter` binary to `/usr/bin`
 
 ```
+chmod ugo+x bw_exporter
 scp bw_exporter root@MINER_IP:/usr/bin
 ```
 
