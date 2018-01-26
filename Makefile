@@ -1,6 +1,8 @@
 DATE=$(shell date -u '+%Y-%m-%d %H:%M:%S')
-VERSION=${TRAVIS_BUILD_ID} ${TRAVIS_COMMIT} ${DATE}
-COMPILE_FLAGS=-ldflags="-X 'main.version=${VERSION}'"
+COMMIT=$(shell git log --format=%h -1)
+UNAME=$(shell uname)
+VERSION=main.version=${TRAVIS_BUILD_NUMBER} ${COMMIT} ${DATE} ${UNAME}
+COMPILE_FLAGS=-ldflags="-X '${VERSION}'"
 
 build:
 	@go build ${COMPILE_FLAGS}
