@@ -2,9 +2,9 @@
 
 # BW Exporter
 
-This is a [Prometheus.io](https://prometheus.io/) exporter for the cgminer binary that is shipped with the BW.com L21 miner. It currently exports a limited set of data. PR's welcome!
+[Prometheus.io](https://prometheus.io/) exporter for the cgminer binary that is shipped with the BW.com L21 miner. It currently exports a limited set of data. PR's welcome!
 
-The [releases tab](https://github.com/lookfirst/bw_exporter/releases) has `master` binaries cross compiled for ARM suitable for running on the miner. These are built automatically on [Travis](https://travis-ci.org/lookfirst/bw_exporter).
+Thanks to [HyperBit.io](https://hyperbitshop.io) for sponsoring this project.
 
 ### Usage (defaults):
 
@@ -24,7 +24,9 @@ Install [dep](https://github.com/golang/dep) and the dependencies...
 
 ### Install onto miner
 
-Copy the `bw_exporter` binary to `/usr/bin`
+The [releases tab](https://github.com/lookfirst/bw_exporter/releases) has `master` binaries cross compiled for ARM suitable for running on the miner. These are built automatically on [Travis](https://travis-ci.org/lookfirst/bw_exporter).
+
+Download the latest release and copy the `bw_exporter` binary to `/usr/bin`
 
 ```
 scp bw_exporter root@MINER_IP:/usr/bin
@@ -59,3 +61,22 @@ ssh root@MINER_IP "systemctl enable bw_exporter; systemctl start bw_exporter"
 ### Test install on miner
 
 Open your browser to `http://MINER_IP:4030/metrics`
+
+### Prometheus configuration
+
+`prometheus.yml`:
+
+```yaml
+scrape_configs:
+  - job_name: 'bw_exporter'
+    file_sd_configs:
+      - files:
+        - 'bw_exporter.json'
+```
+
+`bw_exporter.json`:
+```json
+[{
+	"targets": ["MINER_IP:4030"]
+}]
+```
