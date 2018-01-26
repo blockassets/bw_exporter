@@ -81,3 +81,5 @@ scrape_configs:
 	"targets": ["MINER_IP:4030"]
 }]
 ```
+
+The json configuration is reloaded every time it is modified.
