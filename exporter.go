@@ -12,7 +12,15 @@ import (
 )
 
 //
-func newGaugeMetric(metricName string, docString string, labels []string) *prometheus.GaugeVec {
+func newGauge(metricName string, docString string) prometheus.Gauge {
+	return prometheus.NewGauge(prometheus.GaugeOpts{
+		Name: metricName,
+		Help: docString,
+	})
+}
+
+//
+func newGaugeVec(metricName string, docString string, labels []string) *prometheus.GaugeVec {
 	return prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: metricName,
@@ -24,13 +32,14 @@ func newGaugeMetric(metricName string, docString string, labels []string) *prome
 
 // Collector interface
 type Exporter struct {
-	hostname			string
-	port				int64
-	timeout				time.Duration
-	chipStatGauge		*prometheus.GaugeVec
-	devsHashRateGauge	*prometheus.GaugeVec
-	devsHashCountGauge	*prometheus.GaugeVec
-	devsErrorsGauge		*prometheus.GaugeVec
+	hostname				string
+	port					int64
+	timeout					time.Duration
+	chipStatGauge			*prometheus.GaugeVec
+	devsHashRateGauge		*prometheus.GaugeVec
+	devsHashCountGauge		*prometheus.GaugeVec
+	devsErrorsGauge			*prometheus.GaugeVec
+	devsTemperatureGauge	prometheus.Gauge
 	sync.Mutex
 }
 
@@ -64,13 +73,14 @@ func (e *Exporter) fetchData() (*CgminerStats, error) {
 //
 func NewExporter(cgHost string, cgPort int64, cgTimeout time.Duration) (*Exporter) {
 	return &Exporter{
-		hostname:			cgHost,
-		port:				cgPort,
-		timeout:			cgTimeout,
-		chipStatGauge:		newGaugeMetric("chip_total", "Chip accept/reject total", []string{"id", "state"}),
-		devsHashCountGauge:	newGaugeMetric("devs_hashcount_total", "Device hash accept/reject total", []string{"id", "state"}),
-		devsHashRateGauge:	newGaugeMetric("devs_hashrate_total", "Device hashrate total", []string{"id", "rate"}),
-		devsErrorsGauge:	newGaugeMetric("devs_errors_total", "Device hardware errors total", []string{"id"}),
+		hostname:             cgHost,
+		port:                 cgPort,
+		timeout:              cgTimeout,
+		chipStatGauge:        newGaugeVec("chip_total", "Chip accept/reject total", []string{"id", "state"}),
+		devsHashCountGauge:   newGaugeVec("devs_hashcount_total", "Device hash accept/reject total", []string{"id", "state"}),
+		devsHashRateGauge:    newGaugeVec("devs_hashrate_total", "Device hashrate total", []string{"id", "rate"}),
+		devsErrorsGauge:      newGaugeVec("devs_errors_total", "Device hardware errors total", []string{"id"}),
+		devsTemperatureGauge: newGauge("devs_temperature", "Device temperature"),
 	}
 }
 
@@ -98,8 +108,9 @@ func collectDevs(e *Exporter, cgStats *CgminerStats) {
 		e.devsHashRateGauge.WithLabelValues(idStr, "MHS_5m").Set(value.MHS5m)
 		e.devsHashRateGauge.WithLabelValues(idStr, "MHS_15m").Set(value.MHS15m)
 		e.devsErrorsGauge.WithLabelValues(idStr).Set(float64(value.HardwareErrors))
+		// All 4 devs report the same temperature
+		e.devsTemperatureGauge.Set(value.Temperature)
 	}
-
 }
 
 // Outputs the gauge values on the channel
@@ -108,6 +119,7 @@ func collectGauges(e *Exporter, ch chan<- prometheus.Metric) {
 	e.devsHashRateGauge.Collect(ch)
 	e.devsHashCountGauge.Collect(ch)
 	e.devsErrorsGauge.Collect(ch)
+	e.devsTemperatureGauge.Collect(ch)
 }
 
 //
@@ -116,6 +128,7 @@ func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	e.devsHashCountGauge.Describe(ch)
 	e.devsHashRateGauge.Describe(ch)
 	e.devsErrorsGauge.Describe(ch)
+	e.devsTemperatureGauge.Describe(ch)
 }
 
 //
