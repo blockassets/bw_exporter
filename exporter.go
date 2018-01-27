@@ -91,11 +91,11 @@ func NewExporter(cgHost string, cgPort int64, cgTimeout time.Duration) (*Exporte
 		hostname:             	cgHost,
 		port:                 	cgPort,
 		timeout:				cgTimeout,
-		chipStatGauge:			newGaugeVec("chip_total", "Chip accept/reject total", versionLabel, idStateLabelNames),
-		devsHashCountGauge:		newGaugeVec("devs_hashcount", "Device hash accept/reject total", versionLabel, idStateLabelNames),
-		devsHashRateGauge:		newGaugeVec("devs_hashrate", "Device hashrate total", versionLabel, idRateLabelNames),
-		devsErrorsGauge:		newGaugeVec("devs_errors", "Device hardware errors total", versionLabel, idLabelNames),
-		devsTemperatureGauge:	newGauge("devs_temperature", "Device temperature", versionLabel),
+		chipStatGauge:			newGaugeVec("bw_chipstat", "Chip accept/reject", versionLabel, idStateLabelNames),
+		devsHashCountGauge:		newGaugeVec("bw_devs_hashcount", "Device hash accept/reject", versionLabel, idStateLabelNames),
+		devsHashRateGauge:		newGaugeVec("bw_devs_hashrate", "Device hashrate", versionLabel, idRateLabelNames),
+		devsErrorsGauge:		newGaugeVec("bw_devs_errors", "Device hardware errors", versionLabel, idLabelNames),
+		devsTemperatureGauge:	newGauge("bw_devs_temperature", "Device temperature", versionLabel),
 	}
 }
 
