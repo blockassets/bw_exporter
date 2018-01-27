@@ -3,7 +3,6 @@ package cgminer
 import (
 	"testing"
 	"strings"
-	"io/ioutil"
 )
 
 func TestProcessChipStat(t *testing.T) {
@@ -19,19 +18,13 @@ func TestProcessChipStat(t *testing.T) {
 	}
 }
 
-// Fake test for an issue I found. Setting this up for testing in golang is lame.
 func TestReadVersionFile(t *testing.T) {
-	dat, err := ioutil.ReadFile("./version_test.txt")
+	dat, err := readFileTrim("./version_test.txt")
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	datStr := string(dat)
-	datLen := len(datStr)
-
-	result := strings.TrimSpace(datStr)
-
-	if strings.Contains(result, "\n") || datLen == len(result) {
+	if strings.Contains(*dat, "\n") {
 		t.Fatal("Newline wasn't stripped!")
 	}
 }
