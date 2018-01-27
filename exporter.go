@@ -12,19 +12,28 @@ import (
 )
 
 //
-func newGauge(metricName string, docString string) prometheus.Gauge {
+var (
+	idStateLabelNames = []string{"id", "state"}
+	idRateLabelNames = []string{"id", "rate"}
+	idLabelNames = []string{"id"}
+)
+
+//
+func newGauge(metricName string, docString string, constLabels prometheus.Labels) prometheus.Gauge {
 	return prometheus.NewGauge(prometheus.GaugeOpts{
 		Name: metricName,
 		Help: docString,
+		ConstLabels: constLabels,
 	})
 }
 
 //
-func newGaugeVec(metricName string, docString string, labels []string) *prometheus.GaugeVec {
+func newGaugeVec(metricName string, docString string, constLabels prometheus.Labels, labels []string) *prometheus.GaugeVec {
 	return prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: metricName,
 			Help: docString,
+			ConstLabels: constLabels,
 		},
 		labels,
 	)
@@ -72,15 +81,21 @@ func (e *Exporter) fetchData() (*CgminerStats, error) {
 
 //
 func NewExporter(cgHost string, cgPort int64, cgTimeout time.Duration) (*Exporter) {
+	versionLabel := prometheus.Labels{}
+	version, err := cgminer.ReadVersionFile()
+	if err == nil {
+		versionLabel = prometheus.Labels{"version": version}
+	}
+
 	return &Exporter{
-		hostname:             cgHost,
-		port:                 cgPort,
-		timeout:              cgTimeout,
-		chipStatGauge:        newGaugeVec("chip_total", "Chip accept/reject total", []string{"id", "state"}),
-		devsHashCountGauge:   newGaugeVec("devs_hashcount_total", "Device hash accept/reject total", []string{"id", "state"}),
-		devsHashRateGauge:    newGaugeVec("devs_hashrate_total", "Device hashrate total", []string{"id", "rate"}),
-		devsErrorsGauge:      newGaugeVec("devs_errors_total", "Device hardware errors total", []string{"id"}),
-		devsTemperatureGauge: newGauge("devs_temperature", "Device temperature"),
+		hostname:             	cgHost,
+		port:                 	cgPort,
+		timeout:				cgTimeout,
+		chipStatGauge:			newGaugeVec("chip_total", "Chip accept/reject total", versionLabel, idStateLabelNames),
+		devsHashCountGauge:		newGaugeVec("devs_hashcount", "Device hash accept/reject total", versionLabel, idStateLabelNames),
+		devsHashRateGauge:		newGaugeVec("devs_hashrate", "Device hashrate total", versionLabel, idRateLabelNames),
+		devsErrorsGauge:		newGaugeVec("devs_errors", "Device hardware errors total", versionLabel, idLabelNames),
+		devsTemperatureGauge:	newGauge("devs_temperature", "Device temperature", versionLabel),
 	}
 }
 
@@ -133,6 +148,7 @@ func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
 
 //
 func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
+	// Prevents multiple concurrent calls
 	e.Lock()
 	defer e.Unlock()
 
