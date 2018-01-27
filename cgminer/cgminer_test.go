@@ -2,6 +2,7 @@ package cgminer
 
 import (
 	"testing"
+	"strings"
 )
 
 func TestProcessChipStat(t *testing.T) {
@@ -14,5 +15,17 @@ func TestProcessChipStat(t *testing.T) {
 	csLen := len(actualResult.ChipStat)
 	if csLen != 288 {
 		t.Fatal("Length is not 288")
+	}
+}
+
+// Fake test for an issue I found. Setting this up for testing in golang is lame.
+func TestReadVersionFile(t *testing.T) {
+	version := "ltcminer-version-fan-5w-nocheckpool\n"
+	originalLength := len(version)
+
+	result := strings.TrimSpace(version)
+
+	if strings.Contains(result, "\n") || originalLength == len(result) {
+		t.Fatal("Newline wasn't stripped!")
 	}
 }

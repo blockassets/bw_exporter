@@ -19,7 +19,7 @@ func ReadVersionFile() (string, error) {
 		log.Println(err)
 		return "", err
 	}
-	return string(dat), nil
+	return strings.TrimSpace(string(dat)), nil
 }
 
 
