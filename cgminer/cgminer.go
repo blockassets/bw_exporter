@@ -13,19 +13,17 @@ import (
 )
 
 //
-func readFileTrim(file string) (*string, error) {
+func readFileTrim(file string) (string) {
 	dat, err := ioutil.ReadFile(file)
 	if err != nil {
 		log.Println(err)
-		return nil, err
 	}
 
-	result := strings.TrimSpace(string(dat))
-	return &result, nil
+	return strings.TrimSpace(string(dat))
 }
 
 //
-func ReadVersionFile() (*string, error) {
+func ReadVersionFile() (string) {
 	return readFileTrim("/usr/app/version.txt")
 }
 

@@ -82,9 +82,9 @@ func (e *Exporter) fetchData() (*CgminerStats, error) {
 //
 func NewExporter(cgHost string, cgPort int64, cgTimeout time.Duration) (*Exporter) {
 	versionLabel := prometheus.Labels{}
-	version, err := cgminer.ReadVersionFile()
-	if err == nil {
-		versionLabel = prometheus.Labels{"version": *version}
+	version = cgminer.ReadVersionFile()
+	if len(version) > 0 {
+		versionLabel = prometheus.Labels{"version": version}
 	}
 
 	return &Exporter{

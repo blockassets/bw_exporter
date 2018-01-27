@@ -19,12 +19,9 @@ func TestProcessChipStat(t *testing.T) {
 }
 
 func TestReadVersionFile(t *testing.T) {
-	dat, err := readFileTrim("./version_test.txt")
-	if err != nil {
-		t.Fatal(err)
-	}
+	dat := readFileTrim("./version_test.txt")
 
-	if strings.Contains(*dat, "\n") {
+	if strings.Contains(dat, "\n") {
 		t.Fatal("Newline wasn't stripped!")
 	}
 }
