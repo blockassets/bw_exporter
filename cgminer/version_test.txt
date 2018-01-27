@@ -1,3 +1,1 @@
 ltcminer-version-fan-5w-nocheckpool
-
-

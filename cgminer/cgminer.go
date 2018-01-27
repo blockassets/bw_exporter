@@ -25,9 +25,8 @@ func readFileTrim(file string) (*string, error) {
 }
 
 //
-func ReadVersionFile() (string, error) {
-	result, err := readFileTrim("/usr/app/version.txt")
-	return *result, err
+func ReadVersionFile() (*string, error) {
+	return readFileTrim("/usr/app/version.txt")
 }
 
 

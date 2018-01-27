@@ -84,7 +84,7 @@ func NewExporter(cgHost string, cgPort int64, cgTimeout time.Duration) (*Exporte
 	versionLabel := prometheus.Labels{}
 	version, err := cgminer.ReadVersionFile()
 	if err == nil {
-		versionLabel = prometheus.Labels{"version": version}
+		versionLabel = prometheus.Labels{"version": *version}
 	}
 
 	return &Exporter{
