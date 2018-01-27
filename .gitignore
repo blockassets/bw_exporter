@@ -2,3 +2,4 @@
 *.iml
 bw_exporter
 vendor
+workers.txt
