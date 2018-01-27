@@ -3,12 +3,12 @@ package main
 import (
 	"flag"
 	"log"
+	"time"
+	"os"
 	"net/http"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"time"
-	"os"
 )
 
 var (
