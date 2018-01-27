@@ -8,7 +8,20 @@ import (
 	"strings"
 	"time"
 	"bytes"
+	"io/ioutil"
+	"log"
 )
+
+//
+func ReadVersionFile() (string, error) {
+	dat, err := ioutil.ReadFile("/usr/app/version.txt")
+	if err != nil {
+		log.Println(err)
+		return "", err
+	}
+	return string(dat), nil
+}
+
 
 type CGMiner struct {
 	server string
