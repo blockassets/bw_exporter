@@ -14,6 +14,12 @@
   revision = "925541529c1fa6821df4e44ce2723319eb2be768"
 
 [[projects]]
+  name = "github.com/json-iterator/go"
+  packages = ["."]
+  revision = "28452fcdec4e44348d2af0d91d1e9e38da3a9e0a"
+  version = "1.0.5"
+
+[[projects]]
   name = "github.com/matttproud/golang_protobuf_extensions"
   packages = ["pbutil"]
   revision = "3247c84500bff8d9fb6d579d800f20b3e091582c"
@@ -46,6 +52,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "d26fb00b85e79280581e3e21855792ca0d1c72beacfa66fa2801310b84d598f2"
+  inputs-digest = "74aa36ad90e5c4610916038215f510df60fd2d025397992db1cb0172ac507369"
   solver-name = "gps-cdcl"
   solver-version = 1

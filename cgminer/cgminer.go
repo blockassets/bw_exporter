@@ -2,7 +2,6 @@ package cgminer
 
 import (
 	"bufio"
-	"encoding/json"
 	"fmt"
 	"net"
 	"strings"
@@ -10,7 +9,13 @@ import (
 	"bytes"
 	"io/ioutil"
 	"log"
+
+	"github.com/json-iterator/go"
 )
+
+// Why isn't this part of the stdlib?!
+// Oh right: https://github.com/json-iterator/go/issues/231
+var json = jsoniter.ConfigDefault
 
 //
 func readFileTrim(file string) (string) {
