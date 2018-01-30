@@ -4,7 +4,7 @@
 
 [Prometheus.io](https://prometheus.io/) exporter for the cgminer binary that is shipped with the BW.com L21 miner. It currently exports a limited set of data. PR's welcome!
 
-Thanks to [HyperBit.io](https://hyperbitshop.io) for sponsoring this project.
+Thanks to [HyperBitShop.io](https://hyperbitshop.io) for sponsoring this project.
 
 ### Usage (defaults):
 
