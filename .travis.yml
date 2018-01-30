@@ -1,6 +1,6 @@
 language: go
 go:
-- 1.x
+  - 1.x
 env:
   - DEP_VERSION="v0.4.1"
 before_install:
