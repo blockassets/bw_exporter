@@ -1,8 +1,8 @@
 package cgminer
 
 import (
-	"testing"
 	"strings"
+	"testing"
 )
 
 func TestProcessChipStat(t *testing.T) {

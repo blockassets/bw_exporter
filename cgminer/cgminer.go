@@ -2,13 +2,13 @@ package cgminer
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
+	"io/ioutil"
+	"log"
 	"net"
 	"strings"
 	"time"
-	"bytes"
-	"io/ioutil"
-	"log"
 
 	"github.com/json-iterator/go"
 )
@@ -18,7 +18,7 @@ import (
 var json = jsoniter.ConfigDefault
 
 //
-func readFileTrim(file string) (string) {
+func readFileTrim(file string) string {
 	dat, err := ioutil.ReadFile(file)
 	if err != nil {
 		log.Println(err)
@@ -28,13 +28,12 @@ func readFileTrim(file string) (string) {
 }
 
 //
-func ReadVersionFile() (string) {
+func ReadVersionFile() string {
 	return readFileTrim("/usr/app/version.txt")
 }
 
-
 type CGMiner struct {
-	server string
+	server  string
 	timeout time.Duration
 }
 
@@ -48,7 +47,7 @@ type CGMiner struct {
       "Description": "cpuminer 2.3.2"
     }
   ]
- */
+*/
 type status struct {
 	Code        int
 	Description string
@@ -133,22 +132,22 @@ type status struct {
 //}
 
 type Devs struct {
-	ASC				int
-	Name			string
-	ID				int
-	Enabled			string
-	Status			string
-	MHSav			float64		`json:"MHS av"`
-	MHS5s			float64		`json:"MHS 5s"`
-	MHS1m			float64		`json:"MHS 1m"`
-	MHS5m			float64		`json:"MHS 5m"`
-	MHS15m			float64		`json:"MHS 15m"`
-	Accepted		int64
-	Rejected		int64
-	HardwareErrors	int64		`json:"Hardware Errors"`
-	DeviceElapsed	int64		`json:"Device Elapsed"`
-	FansSpeed		int64		`json:"Fans Speed"`
-	Temperature		float64		`json:"temperature"`
+	ASC            int
+	Name           string
+	ID             int
+	Enabled        string
+	Status         string
+	MHSav          float64 `json:"MHS av"`
+	MHS5s          float64 `json:"MHS 5s"`
+	MHS1m          float64 `json:"MHS 1m"`
+	MHS5m          float64 `json:"MHS 5m"`
+	MHS15m         float64 `json:"MHS 15m"`
+	Accepted       int64
+	Rejected       int64
+	HardwareErrors int64   `json:"Hardware Errors"`
+	DeviceElapsed  int64   `json:"Device Elapsed"`
+	FansSpeed      int64   `json:"Fans Speed"`
+	Temperature    float64 `json:"temperature"`
 }
 
 //type Pool struct {
@@ -236,16 +235,16 @@ type Devs struct {
 //}
 
 type devsResponse struct {
-	Status  []status  `json:"STATUS"`
-	Devs    []Devs    `json:"DEVS"`
-	Id      int64     `json:"id"`
+	Status []status `json:"STATUS"`
+	Devs   []Devs   `json:"DEVS"`
+	Id     int64    `json:"id"`
 }
 
 type ChipStat map[string]float64
 
 type chipStatResponse struct {
-	Status  []status  `json:"STATUS"`
-	ChipStat ChipStat	`json:"CHIPSTAT"`
+	Status   []status `json:"STATUS"`
+	ChipStat ChipStat `json:"CHIPSTAT"`
 }
 
 //type poolsResponse struct {

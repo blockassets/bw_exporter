@@ -2,27 +2,27 @@ package main
 
 import (
 	"log"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
-	"strconv"
 
-	"github.com/prometheus/client_golang/prometheus"
 	"github.com/lookfirst/bw_exporter/cgminer"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 //
 var (
 	idStateLabelNames = []string{"id", "state"}
-	idRateLabelNames = []string{"id", "rate"}
-	idLabelNames = []string{"id"}
+	idRateLabelNames  = []string{"id", "rate"}
+	idLabelNames      = []string{"id"}
 )
 
 //
 func newGauge(metricName string, docString string, constLabels prometheus.Labels) prometheus.Gauge {
 	return prometheus.NewGauge(prometheus.GaugeOpts{
-		Name: metricName,
-		Help: docString,
+		Name:        metricName,
+		Help:        docString,
 		ConstLabels: constLabels,
 	})
 }
@@ -31,8 +31,8 @@ func newGauge(metricName string, docString string, constLabels prometheus.Labels
 func newGaugeVec(metricName string, docString string, constLabels prometheus.Labels, labels []string) *prometheus.GaugeVec {
 	return prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
-			Name: metricName,
-			Help: docString,
+			Name:        metricName,
+			Help:        docString,
 			ConstLabels: constLabels,
 		},
 		labels,
@@ -41,21 +41,21 @@ func newGaugeVec(metricName string, docString string, constLabels prometheus.Lab
 
 // Collector interface
 type Exporter struct {
-	hostname				string
-	port					int64
-	timeout					time.Duration
-	chipStatGauge			*prometheus.GaugeVec
-	devsHashRateGauge		*prometheus.GaugeVec
-	devsHashCountGauge		*prometheus.GaugeVec
-	devsErrorsGauge			*prometheus.GaugeVec
-	devsTemperatureGauge	prometheus.Gauge
+	hostname             string
+	port                 int64
+	timeout              time.Duration
+	chipStatGauge        *prometheus.GaugeVec
+	devsHashRateGauge    *prometheus.GaugeVec
+	devsHashCountGauge   *prometheus.GaugeVec
+	devsErrorsGauge      *prometheus.GaugeVec
+	devsTemperatureGauge prometheus.Gauge
 	sync.Mutex
 }
 
 //
 type CgminerStats struct {
-	ChipStat	*cgminer.ChipStat
-	Devs		*[]cgminer.Devs
+	ChipStat *cgminer.ChipStat
+	Devs     *[]cgminer.Devs
 }
 
 //
@@ -69,7 +69,7 @@ func (e *Exporter) fetchData() (*CgminerStats, error) {
 		log.Println(err)
 		return nil, err
 	}
-	
+
 	devs, err := miner.Devs()
 	if err != nil {
 		log.Println(err)
@@ -80,7 +80,7 @@ func (e *Exporter) fetchData() (*CgminerStats, error) {
 }
 
 //
-func NewExporter(cgHost string, cgPort int64, cgTimeout time.Duration) (*Exporter) {
+func NewExporter(cgHost string, cgPort int64, cgTimeout time.Duration) *Exporter {
 	versionLabel := prometheus.Labels{}
 	version = cgminer.ReadVersionFile()
 	if len(version) > 0 {
@@ -88,14 +88,14 @@ func NewExporter(cgHost string, cgPort int64, cgTimeout time.Duration) (*Exporte
 	}
 
 	return &Exporter{
-		hostname:             	cgHost,
-		port:                 	cgPort,
-		timeout:				cgTimeout,
-		chipStatGauge:			newGaugeVec("bw_chipstat", "Chip accept/reject", versionLabel, idStateLabelNames),
-		devsHashCountGauge:		newGaugeVec("bw_devs_hashcount", "Device hash accept/reject", versionLabel, idStateLabelNames),
-		devsHashRateGauge:		newGaugeVec("bw_devs_hashrate", "Device hashrate", versionLabel, idRateLabelNames),
-		devsErrorsGauge:		newGaugeVec("bw_devs_errors", "Device hardware errors", versionLabel, idLabelNames),
-		devsTemperatureGauge:	newGauge("bw_devs_temperature", "Device temperature", versionLabel),
+		hostname:             cgHost,
+		port:                 cgPort,
+		timeout:              cgTimeout,
+		chipStatGauge:        newGaugeVec("bw_chipstat", "Chip accept/reject", versionLabel, idStateLabelNames),
+		devsHashCountGauge:   newGaugeVec("bw_devs_hashcount", "Device hash accept/reject", versionLabel, idStateLabelNames),
+		devsHashRateGauge:    newGaugeVec("bw_devs_hashrate", "Device hashrate", versionLabel, idRateLabelNames),
+		devsErrorsGauge:      newGaugeVec("bw_devs_errors", "Device hardware errors", versionLabel, idLabelNames),
+		devsTemperatureGauge: newGauge("bw_devs_temperature", "Device temperature", versionLabel),
 	}
 }
 
