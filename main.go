@@ -9,6 +9,7 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"fmt"
 )
 
 var (
@@ -17,7 +18,7 @@ var (
 )
 
 func main() {
-	port := flag.String("port", ":4030", "The address to listen on for /metrics HTTP requests.")
+	port := flag.String("port", "4030", "The address to listen on for /metrics HTTP requests.")
 	cgHost := flag.String("cghost", "127.0.0.1", "The address of the worker.")
 	cgPort := flag.Int64("cgport", 4028, "The port cgminer runs on.")
 	cgTimeout := flag.Duration("cgtimeout", 5*time.Second, "The amount of time to wait for cgminer to return.")
@@ -27,5 +28,5 @@ func main() {
 
 	http.Handle("/metrics", promhttp.Handler())
 	log.Printf("%s %s", os.Args[0], version)
-	log.Fatal(http.ListenAndServe(*port, nil))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", *port), nil))
 }
