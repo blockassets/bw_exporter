@@ -5,6 +5,7 @@
 passwd="bwcon"
 export SSHPASS="${passwd}"
 
+export SERVICE="bw_exporter"
 
 if [ -e "./workers.txt" ] ; then
 	WORKERS=`cat ./workers.txt`
@@ -18,9 +19,9 @@ fi
 dowork() {
 	ipaddr=$1
 	echo "----------- ${ipaddr} start"
-	sshpass -e scp -o StrictHostKeychecking=no bw_exporter root@$ipaddr:/usr/bin
-	sshpass -e scp -o StrictHostKeychecking=no bw_exporter.service root@$ipaddr:/etc/systemd/system
-	sshpass -e ssh -o StrictHostKeychecking=no root@$ipaddr 'chmod ugo+x /usr/bin/bw_exporter; systemctl enable bw_exporter; systemctl start bw_exporter;'
+	sshpass -e scp -o StrictHostKeychecking=no ${SERVICE} root@$ipaddr:/usr/bin
+	sshpass -e scp -o StrictHostKeychecking=no ${SERVICE}.service root@$ipaddr:/etc/systemd/system
+	sshpass -e ssh -o StrictHostKeychecking=no root@$ipaddr "chmod ugo+x /usr/bin/${SERVICE}; systemctl enable ${SERVICE}; systemctl start ${SERVICE};"
 	echo "----------- ${ipaddr} finish"
 }
 
