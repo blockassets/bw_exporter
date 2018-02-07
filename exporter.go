@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lookfirst/bw_exporter/cgminer"
+	"github.com/blockassets/bw_exporter/cgminer"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
