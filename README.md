@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/lookfirst/bw_exporter.svg?branch=master)](https://travis-ci.org/lookfirst/bw_exporter)
+[![Build Status](https://travis-ci.org/blockassets/bw_exporter.svg?branch=master)](https://travis-ci.org/blockassets/bw_exporter)
 
 # BW Exporter
 
@@ -24,7 +24,7 @@ Install [dep](https://github.com/golang/dep) and the dependencies...
 
 ### Install onto miner
 
-The [releases tab](https://github.com/lookfirst/bw_exporter/releases) has `master` binaries cross compiled for ARM suitable for running on the miner. These are built automatically on [Travis](https://travis-ci.org/lookfirst/bw_exporter).
+The [releases tab](https://github.com/blockassets/bw_exporter/releases) has `master` binaries cross compiled for ARM suitable for running on the miner. These are built automatically on [Travis](https://travis-ci.org/blockassets/bw_exporter).
 
 Download the latest release and copy the `bw_exporter` binary to `/usr/bin`
 
